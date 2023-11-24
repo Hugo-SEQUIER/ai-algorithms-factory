@@ -21,7 +21,7 @@ class Roll:
     
     def add_biscuit(self, position, biscuit):
         if self.check_position_empty(position, biscuit.length):
-            defects_at_position = [x["defects"] for x in self.roll[position : position + biscuit.length -1]]
+            defects_at_position = [x["defects"] for x in self.roll[position : position + biscuit.length]]
             sum_defects_at_position = {}
             for d in defects_at_position:
                 for key, value in d.items():

@@ -1,6 +1,6 @@
 class Biscuit:
-    def __init__(self, nb_biscuit, length, value, max_defects) :
-        self.nb_biscuit = nb_biscuit 
+    def __init__(self, type, length, value, max_defects) :
+        self.type = type 
         self.length = length
         self.value = value
         self.max_defects = max_defects
@@ -16,12 +16,6 @@ class Biscuit:
                 dict_defect[key] = value + nb_defect
         return dict_defect
 
-    def check_defect(self, type_defect, nb_defect=1):
-        copy_defect = self.defects.copy()
-        copy_defect = self.update_defects(copy_defect, type_defect, nb_defect)
-        for key, value in copy_defect.items() :
-            if value > self.max_defects[key]:
-                print("Can't add biscuit")
-                return False
-        return True
+    def check_defect(self, defects_on_roll):
+        return all(defects_on_roll[k] <= self.max_defects[k] for k in defects_on_roll if k in self.max_defects)
         

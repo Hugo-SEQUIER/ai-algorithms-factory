@@ -21,8 +21,12 @@ class Roll:
     
     def add_biscuit(self, position, biscuit):
         if self.check_position_empty(position, biscuit.length):
-            defects_at_position = self.roll[position]["defects"]
-            if all(biscuit.check_defect(defect_type, nb_defect) for defect_type,nb_defect in defects_at_position.items()):
+            defects_at_position = [x["defects"] for x in self.roll[position : position + biscuit.length]]
+            sum_defects_at_position = {}
+            for d in defects_at_position:
+                for key, value in d.items():
+                    sum_defects_at_position[key] = sum_defects_at_position.get(key, 0) + value
+            if biscuit.check_defect(sum_defects_at_position):
                 for idx_length in range(0, biscuit.length):
                     self.roll[position + idx_length]["empty"] = biscuit
         return self.roll

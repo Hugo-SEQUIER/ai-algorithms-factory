@@ -61,6 +61,5 @@ class Biscuit:
         copy_defect = self.update_defects(copy_defect, type_defect, nb_defect)
         for key, value in copy_defect.items() :
             if value > self.max_defects[key]:
-                print("Can't add biscuit")
                 return False
         return True

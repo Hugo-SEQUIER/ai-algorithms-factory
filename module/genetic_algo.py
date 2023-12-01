@@ -2,6 +2,16 @@ import random
 
 class GeneticAlgorithm:
     def __init__(self, roll, biscuits, population_size, generations, mutation_rate):
+        """
+        Initializes the Genetic Algorithm for optimizing biscuit placement on a roll.
+
+        Parameters:
+        roll (Roll): The roll of dough to be used.
+        biscuits (list): List of available biscuit types.
+        population_size (int): The number of individuals in each generation.
+        generations (int): The total number of generations to evolve.
+        mutation_rate (float): The probability of mutation in each individual.
+        """
         self.roll = roll
         self.biscuits = biscuits
         self.population_size = population_size
@@ -9,6 +19,13 @@ class GeneticAlgorithm:
         self.mutation_rate = mutation_rate
 
     def generate_individual(self):
+        """
+        Generates a single individual for the population. An individual is a potential solution
+        representing a specific arrangement of biscuits on the roll.
+
+        Returns:
+        list: A list of tuples, each representing a biscuit and its position on the roll.
+        """
         individual = []
         position = 0
         while position < self.roll.length:
@@ -21,25 +38,74 @@ class GeneticAlgorithm:
         return individual
 
     def generate_population(self):
+        """
+        Generates the initial population for the algorithm, consisting of multiple individuals.
+
+        Returns:
+        list: A list of individuals, each representing a potential solution.
+        """
         return [self.generate_individual() for _ in range(self.population_size)]
 
     def fitness(self, individual):
-        # Calculate the total value of biscuits in the individual
-        return sum(biscuit.value for _, biscuit in individual if biscuit is not None)
+        """
+        Calculates the fitness of an individual. Fitness is determined by the total value
+        of biscuits placed on the roll.
+
+        Parameters:
+        individual (list): An individual solution from the population.
+
+        Returns:
+        int: The fitness value of the individual.
+        """
+        idx = 0
+        cmp = 0
+        while idx < len(individual):
+            _, biscuit = individual[idx]
+            if biscuit == None :
+                idx += 1
+            else :
+                cmp += biscuit.value
+                idx += biscuit.length - 1
+
+        return cmp
 
     def select_parents(self, population):
-        # Select individuals for reproduction based on their fitness
+        """
+        Selects a pair of parents for reproduction based on their fitness.
+
+        Parameters:
+        population (list): The current population of individuals.
+
+        Returns:
+        tuple: Two selected individuals from the population.
+        """
         weights = [self.fitness(individual) for individual in population]
         return random.choices(population, weights=weights, k=2)
 
     def crossover(self, parent1, parent2):
-        # Combine two individuals to create a new individual
+        """
+        Performs crossover between two parents to produce a new individual.
+
+        Parameters:
+        parent1, parent2 (list): The parent individuals.
+
+        Returns:
+        list: A new individual resulting from the crossover of the parents.
+        """
         crossover_point = random.randint(1, self.roll.length - 1)
         child = parent1[:crossover_point] + parent2[crossover_point:]
         return child
 
     def mutate(self, individual):
-        # Randomly change an individual's biscuit placement
+        """
+        Applies mutation to an individual. Mutation randomly alters the biscuit placement.
+
+        Parameters:
+        individual (list): An individual to be mutated.
+
+        Returns:
+        list: The mutated individual.
+        """
         for i in range(len(individual)):
             if random.random() < self.mutation_rate:
                 position, _ = individual[i]
@@ -48,6 +114,12 @@ class GeneticAlgorithm:
         return individual
 
     def run(self):
+        """
+        Runs the genetic algorithm over a number of generations to find the best solution.
+
+        Returns:
+        tuple: The best individual found and its fitness value.
+        """
         population = self.generate_population()
 
         for _ in range(self.generations):

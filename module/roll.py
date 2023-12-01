@@ -53,7 +53,6 @@ class Roll:
         """
         if position >=0 and (position + biscuit_length) < self.length :
             return all(element["empty"] == -1 for element in self.roll[position : (position + biscuit_length)])
-        print("Can't add biscuit")
         return False
     
     def add_biscuit(self, position, biscuit):
